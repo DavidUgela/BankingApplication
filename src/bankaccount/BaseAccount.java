@@ -18,15 +18,17 @@ class BaseAccount implements Account {
     public AccountTypes account_type;
     private double overdraftLimit;
     private boolean hasOverdraft;
-    private int banksAccount;
+    private double withdrawalLimit; 
+
     int id;
  
     //Set up a new account 
-    public BaseAccount(String acc_owner, int acc_num, AccountTypes types, int _id) 
+    public BaseAccount(String acc_owner, int acc_num, AccountTypes types, int _id, double limit) 
     { 
         holders.add(acc_owner);         
         acc_number = acc_num; 
-        account_type = types; 
+        account_type = types;
+        withdrawalLimit = limit;
     } 
  
     //Add account holder 
@@ -85,9 +87,13 @@ class BaseAccount implements Account {
     public void grantOverdraft() {
         this.hasOverdraft = true;
     }
-    public void removeOverdraft() {
+    public void revokeOverdraft() {
         this.hasOverdraft = false;
     }
+    
+    public void changeOverdraft(double limit) {
+        this.overdraftLimit = limit;
+    } 
 } 
     
 

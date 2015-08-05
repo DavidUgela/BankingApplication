@@ -6,9 +6,9 @@
 package bankaccount;
 class BusinessAccount extends BaseAccount{ 
  
-    public BusinessAccount(String business_name, int acc_num, int _id) 
+   public BusinessAccount(String owner, int acc_num, int _id) 
     { 
-        super(business_name, acc_num, AccountTypes.Business,_id); 
+        super(owner, acc_num, AccountTypes.Business, _id, 300); 
     } 
  
  

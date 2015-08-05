@@ -7,9 +7,9 @@ package bankaccount;
 
 class StudentAccount extends BaseAccount{ 
  
-    public StudentAccount(String owner, int acc_num, int _id) 
+   public StudentAccount(String owner, int acc_num, int _id) 
     { 
-        super(owner, acc_num, AccountTypes.Student, _id); 
+        super(owner, acc_num, AccountTypes.Student, _id, 300); 
     } 
  
 } 
