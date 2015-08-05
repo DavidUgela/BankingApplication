@@ -15,7 +15,10 @@ class BaseAccount implements Account {
     ArrayList<Transaction> transactions = new ArrayList<Transaction>();   
     protected double interestRate;     
     protected int acc_number; 
-    public AccountTypes account_type; 
+    public AccountTypes account_type;
+    private double overdraftLimit;
+    private boolean hasOverdraft;
+    private int banksAccount;
     int id;
  
     //Set up a new account 
@@ -77,6 +80,13 @@ class BaseAccount implements Account {
     public ArrayList<Transaction> getTransactions()
     {
         return transactions;
+    }
+    
+    public void grantOverdraft() {
+        this.hasOverdraft = true;
+    }
+    public void removeOverdraft() {
+        this.hasOverdraft = false;
     }
 } 
     

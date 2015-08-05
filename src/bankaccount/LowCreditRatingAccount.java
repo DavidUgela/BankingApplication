@@ -15,4 +15,9 @@ public class LowCreditRatingAccount extends BaseAccount{
         super(owner, acc_num, AccountTypes.LowCredit, _id); 
     } 
     
+     @Override
+     public void grantOverdraft() {
+         //Low credit account should not have an overdraft
+         // do nothing
+     }
 }

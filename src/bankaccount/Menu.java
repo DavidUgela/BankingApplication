@@ -17,11 +17,25 @@ class Menu {
     private int acc_num;     
     private int acc_number;     
     private double amount; 
-    private String name; 
+    private String name;
+    private int penaltiesAccountNumber;
+    private int penaltiesCustomerId;
  
     public Menu() {         
+        penaltiesCustomerId = 999;
         main_menu(); 
+        
     } 
+    
+        
+    private void openPenaltiesAccount() {
+        BaseAccount pAccount = new CurrentAccount("Penalties Account", acc_num, penaltiesCustomerId);
+        pAccount.deposit(10000.00);
+        acc_num++;
+        penaltiesAccountNumber = pAccount.getAccountNum();
+        accounts.add(pAccount);
+        
+    }
  
     public void main_menu() { 
  
