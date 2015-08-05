@@ -18,8 +18,7 @@ class BaseAccount implements Account {
     public AccountTypes account_type;
     private double overdraftLimit;
     private boolean hasOverdraft;
-    private double withdrawalLimit; 
-
+    private double withdrawalLimit;
     int id;
  
     //Set up a new account 
@@ -29,7 +28,12 @@ class BaseAccount implements Account {
         acc_number = acc_num; 
         account_type = types;
         withdrawalLimit = limit;
-    } 
+    }
+
+    public double getWithdrawalLimit() {
+        return withdrawalLimit;
+    }
+    
  
     //Add account holder 
     public void AddAccHolder(String acc_owner, int acc_num) 

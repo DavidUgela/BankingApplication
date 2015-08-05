@@ -133,51 +133,20 @@ class Menu {
 //Convert the string the user enters to an int                 
                 acc_number = Integer.parseInt(input.nextLine()); 
                 //Write instruction to the user 
-                System.out.println("Enter deposit amount: ");                 
+                System.out.println("Enter withdraw amount: ");                 
 //Convert the string entered by the user to a double                 
                 amount = Double.parseDouble(input.nextLine()); 
                  
-                 for (int i = 0; i < accounts.size(); i++) { 
-                    if (accounts.get(i).getAccountNum() == acc_number) 
-                    {                         
-                        if (accounts.get(i).get_acc_type() == AccountTypes.Current) {                             
-                            if (amount <= 500) 
-                            { 
-                                accounts.get(i).withdraw(amount); 
-                                accounts.get(i).addTransaction(new Date(), "Withdraw", amount);
-                                break; 
-                            } else { 
-                                System.out.println("The maximum daily withdrawal for a Current account is ?500. This transaction has been cancelled");                                 break; 
-                            }  
-                        } else if (accounts.get(i).get_acc_type() == AccountTypes.Savings) 
-                        {                             
-                            if (amount <= 300) 
-                            { 
-                                accounts.get(i).withdraw(amount);     
-                                accounts.get(i).addTransaction(new Date(), "Withdraw", amount);
-                                break; 
-                            } 
-                            else 
-                            { 
-                                System.out.println("The maximum daily withdrawal for a Savings account is ?300. This transaction has been cancelled");                                 break; 
-                            }  
+                 for (int i = 0; i < accounts.size(); i++) {
+                     //find the account
+                     if(accounts.get(i).getAccountNum() == acc_number) {
+                         //check it is under their withdrawal limit
+                        if ( amount <= accounts.get(i).getWithdrawalLimit() ){
+                           accounts.get(i).withdraw(amount);
+                           accounts.get(i).addTransaction(new Date(), "Withdrawal", amount);
                         } 
-                        else if (accounts.get(i).get_acc_type() == AccountTypes.Current) 
-                        {                             
-                            if (amount <= 500) 
-                            { 
-                                accounts.get(i).withdraw(amount);
-                                accounts.get(i).addTransaction(new Date(), "Withdraw", amount);
-                                break; 
-                            } 
-                            else 
-                            { 
-                                System.out.println("The maximum daily withdrawal for a Business account is ?500. This transaction has been cancelled");                                 break; 
-                            }                          
-                        }                         
-                        break; 
-                    } 
-                }                
+                     }
+                    }                
                                  
                  break; 
              case 5:                 //Write the instruction to the user 
