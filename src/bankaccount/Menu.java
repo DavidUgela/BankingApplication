@@ -1,27 +1,32 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
+//Elisha David Ugela, 35016
+
 package bankaccount;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-class Menu { 
- 
- 
+class Menu {
     private static Scanner input = new Scanner(System.in); 
-    private  ArrayList<BaseAccount> accounts = new ArrayList<BaseAccount>();     
+    private  ArrayList<Loan> loans = new ArrayList<Loan>();     
+    private  ArrayList<BaseAccount> accounts = new ArrayList<BaseAccount>();  
     private int acc_num;     
     private int acc_number;     
     private double amount; 
     private String name;
     private int penaltiesAccountNumber;
     private int penaltiesCustomerId;
+    private ScheduledExecutorService scheduler;
  
     public Menu() {         
+        scheduler = Executors.newScheduledThreadPool(3);
+        Interest interest = new Interest();
+        interest.setMenu(this);
+        scheduler.scheduleAtFixedRate(interest, 0, 365, TimeUnit.DAYS);
         penaltiesCustomerId = 999;
         main_menu(); 
         
@@ -34,9 +39,8 @@ class Menu {
         acc_num++;
         penaltiesAccountNumber = pAccount.getAccountNum();
         accounts.add(pAccount);
-        
     }
- 
+    
     public void main_menu() { 
  
         System.out.println("Press Esc to enter menu"); 
@@ -46,15 +50,16 @@ class Menu {
             System.out.println(e); 
         } 
  
-        System.out.println("1. Create Current Account\r\n");         
-        System.out.println("2. Deposit\r\n"); 
-        System.out.println("3. Display Balance\r\n"); 
-        System.out.println("4. Withdraw\r\n"); 
-        System.out.println("5. Transfer Money\r\n"); 
-        System.out.println("6. Pay Interest\r\n"); 
-        System.out.println("7. Add Account Holder\r\n"); 
-        System.out.println("8. Show all accounts Held by a customer\r\n"); 
-        System.out.println("9. View Transactions\r\n"); 
+        System.out.println("1. Create Current Account");         
+        System.out.println("2. Deposit"); 
+        System.out.println("3. Display Balance"); 
+        System.out.println("4. Withdraw"); 
+        System.out.println("5. Transfer Money"); 
+        System.out.println("6. Pay Interest"); 
+        System.out.println("7. Add Account Holder"); 
+        System.out.println("8. Show all accounts Held by a customer"); 
+        System.out.println("9. View Transactions"); 
+        System.out.println("10. Take out Loan");
         System.out.println("Select option: "); 
  
         int option = Integer.parseInt(input.nextLine()); 
@@ -98,11 +103,11 @@ class Menu {
              case 2: 
                 //Write the instruction to the user 
                 System.out.println("Enter account Number: ");                 
-//Convert the string the user enters to an int                 
+                //Convert the string the user enters to an int                 
                 acc_number = Integer.parseInt(input.nextLine()); 
                 //Write instruction to the user 
                 System.out.println("Enter deposit amount: ");                 
-//Convert the string entered by the user to a double                 
+                //Convert the string entered by the user to a double                 
                 amount = Double.parseDouble(input.nextLine());                 
                 for (int i = 0; i < accounts.size(); i++) { 
                     if (accounts.get(i).getAccountNum() == acc_number) 
@@ -149,14 +154,16 @@ class Menu {
                     }                
                                  
                  break; 
-             case 5:                 //Write the instruction to the user 
+             case 5:                 
+                //Write the instruction to the user 
                 System.out.println("Enter account Number to transfer money FROM:"); 
                 //Convert the string the user enters to an int                 
                 acc_number = Integer.parseInt(input.nextLine()); 
                 //Write instruction to the user 
                 System.out.println("Enter transfer amount: ");                 
-//Convert the string entered by the user to a double                 
+                //Convert the string entered by the user to a double                 
                 amount = Double.parseDouble(input.nextLine());                 
+                
                 for (int i = 0; i < accounts.size(); i++) { 
                     if (accounts.get(i).getAccountNum() == acc_number) { 
                          
@@ -176,28 +183,37 @@ class Menu {
                  
                 System.out.println("Enter account Number to transfer money TO: "); 
                 //Convert the string the user enters to an int                 
-                acc_number = Integer.parseInt(input.nextLine());                 
+                double acc_number_second = Integer.parseInt(input.nextLine());
+                boolean exists = false;
                 for (int i = 0; i < accounts.size(); i++) 
                 { 
-                    if (accounts.get(i).getAccountNum() == acc_number) 
+                    if (accounts.get(i).getAccountNum() == acc_number_second) 
                     {                         
+                        exists = true;
                         accounts.get(i).deposit(amount);
                         accounts.get(i).addTransaction(new Date(), "Transfer", amount);
                         break; 
-                    } 
+                    }
                 }     
                  
-               System.out.println("Payment has been successfully transferred"); 
+                if (!exists) {
+                    for (int i = 0; i < accounts.size(); i++) {
+                        if(accounts.get(i).getAccountNum() == acc_number) {
+                            accounts.get(i).deposit(amount);
+                            accounts.get(i).addTransaction(new Date(), "Failed Transfer", amount);
+                        }
+                    }
+                    System.out.println("Destination account not found");
+                } else {
+                    System.out.println("Payment has been successfully transferred"); 
+                
+                }
+                 
                                  
                break;     
                    
             case 6: 
-             
-                for (int i = 0; i < accounts.size(); i++) {                     
-                    accounts.get(i).interest_rate(); 
-                } 
-                System.out.println("Interest has been paid");                 
-                break;                 
+                payInterest();
                  
              
             case 7: 
@@ -243,9 +259,28 @@ class Menu {
                     } 
                 }             
                  break;
+                 
+                 case 10:
+                    System.out.println("Please enter the amount being borrowed");
+                    amount = Double.parseDouble(input.nextLine());
+                    System.out.println("Please enter the interest rate");
+                    double ir = Double.parseDouble(input.nextLine());
+                    loans.add(new Loan(amount, ir));
+                    
+                    System.out.println("Loan has been granted");
+                    break;
+
+                 
+                 
         } 
  
         main_menu(); 
  
+    }
+    
+    public void payInterest() {
+        for (int i = 0; i < accounts.size(); i++) {                     
+            accounts.get(i).interest_rate(); 
+        }
     }
 }
